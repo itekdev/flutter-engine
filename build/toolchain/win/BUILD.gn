@@ -37,6 +37,7 @@ toolchain_data = exec_script("setup_toolchain.py",
                                windows_sdk_path,
                                visual_studio_runtime_dirs,
                                current_cpu,
+                               windows_sdk_version,
                              ],
                              "scope")
 

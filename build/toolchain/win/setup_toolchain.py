@@ -102,14 +102,17 @@ def _CopyTool(source_path):
 
 
 def main():
-  if len(sys.argv) != 5:
+  if len(sys.argv) < 5:
     print('Usage setup_toolchain.py '
-          '<visual studio path> <win sdk path> '
-          '<runtime dirs> <target_cpu>')
+          '<visual studio path> <win sdk path>'
+          '<runtime dirs> <target_cpu>'
+          '<win sdk version>')
     sys.exit(2)
   win_sdk_path = sys.argv[2]
   runtime_dirs = sys.argv[3]
   target_cpu = sys.argv[4]
+  if len(sys.argv) > 5:
+      win_sdk_version = sys.argv[5]
 
   cpus = ('x86', 'x64', 'arm64')
   assert target_cpu in cpus
@@ -139,10 +142,16 @@ def main():
     # present in the Visual Studio one.
 
     if win_sdk_path:
-      additional_includes = ('{sdk_dir}\\Include\\shared;' +
-                             '{sdk_dir}\\Include\\um;' +
-                             '{sdk_dir}\\Include\\winrt;').format(
-                                  sdk_dir=win_sdk_path)
+      if len(win_sdk_version) > 0:
+          additional_includes = ('{sdk_dir}\\{sdk_ver}\\Include\\shared;' +
+                                 '{sdk_dir}\\{sdk_ver}\\Include\\um;' +
+                                 '{sdk_dir}\\{sdk_ver}\\Include\\winrt;').format(
+              sdk_dir=win_sdk_path, sdk_ver=win_sdk_version)
+      else :
+          additional_includes = ('{sdk_dir}\\Include\\shared;' +
+                                 '{sdk_dir}\\Include\\um;' +
+                                 '{sdk_dir}\\Include\\winrt;').format(
+                                      sdk_dir=win_sdk_path)
       env['INCLUDE'] = additional_includes + env['INCLUDE']
     env_block = _FormatAsEnvironmentBlock(env)
     with open('environment.' + cpu, 'wb') as f:

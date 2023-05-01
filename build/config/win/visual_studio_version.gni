@@ -20,6 +20,8 @@ declare_args() {
   # This value is the default location, override if you have a different
   # installation location.
   windows_sdk_path = "C:\Program Files (x86)\Windows Kits\8.1"
+
+  windows_sdk_version = ""
 }
 
 if (visual_studio_path == "") {
@@ -30,6 +32,7 @@ if (visual_studio_path == "") {
   visual_studio_version = _toolchain_data.vs_version
   wdk_path = _toolchain_data.wdk_dir
   visual_studio_runtime_dirs = _toolchain_data.runtime_dirs
+  windows_sdk_version = _toolchain_data.sdk_version
 } else {
   assert(visual_studio_version != "",
          "You must set the visual_studio_version if you set the path")
